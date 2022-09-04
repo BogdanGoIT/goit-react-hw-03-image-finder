@@ -27,17 +27,7 @@ export class App extends Component {
         const nextName = this.state.searchName;
         const { page } = this.state;
 
-
-
         if (prevName !== nextName || prevState.page !== page) {
-            
-        if (prevName !== nextName) {
-            this.setState({
-                page: 1, 
-                imagesHits: [],
-                status: 'pending',
-            });
-        }
 
             galeryAPI.fetchGalery(nextName, page)
                 .then(imagesHits => this.setState(state => ({
@@ -50,19 +40,31 @@ export class App extends Component {
     }
 
   handleIncrement = () => {
+
       this.setState(prevState => ({
-          page: prevState.page + 1
+        page: prevState.page + 1,
       }))
+    
+        
     }
 
   toggleModal = () => {
+
+    
     this.setState(({ showModal }) => ({
     showModal: !showModal
     }))
+
+    
   }
 
   handleFormSubmit = searchName => {
-    this.setState({ searchName });
+    this.setState({
+      searchName,
+      page: 1,
+      imagesHits: [],
+      status: 'pending',
+    });
   }
 
   render() {
