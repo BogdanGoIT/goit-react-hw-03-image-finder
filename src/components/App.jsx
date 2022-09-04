@@ -8,9 +8,6 @@ import { Modal } from "./Modal/Modal";
 
 import galeryAPI from '../services/galery-api';
 
-import './styles.css';
-
-
 export class App extends Component {
   state = {
     searchName: '',

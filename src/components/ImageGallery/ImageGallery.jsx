@@ -1,6 +1,8 @@
-export const ImageGallery = ({children}) => {
+import css from './ImageGallery.module.css';
+
+export const ImageGallery = ({ children }) => {
     return (
-        <ul className="gallery">
+        <ul className={css.ImageGallery}>
             {children}
         </ul>
     )
