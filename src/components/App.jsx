@@ -19,13 +19,26 @@ export class App extends Component {
     status: 'idle',
     page: 1,
     showModal: false,
+    modalPhoto: null,
   }
 
+  componentDidMount() {
+    console.log('componentDidMount');
+
+    window.addEventListener('keydown', this.handleKeyDown)
+  }
+
+  componentWillUnmount() {
+    console.log('componentWillUnmount');
+
+    window.removeEventListener('keydown', this.handleKeyDown)
+  }
 
   componentDidUpdate(prevProps, prevState) {
         const prevName = prevState.searchName;
         const nextName = this.state.searchName;
         const { page } = this.state;
+
 
         if (prevName !== nextName || prevState.page !== page) {
 
@@ -37,26 +50,24 @@ export class App extends Component {
                 .catch(error => this.setState({ error, status: 'rejected' }))   
         }
 
-    }
+  }
+  
+  handleKeyDown = e => {
+      if (e.code === 'Escape') {
+        console.log('Нажали ESC, нужно закрыть модалку');
+
+        this.toggleModal();
+     }
+
+  }
 
   handleIncrement = () => {
-
       this.setState(prevState => ({
         page: prevState.page + 1,
-      }))
-    
-        
+      }))  
     }
 
-  toggleModal = () => {
 
-    
-    this.setState(({ showModal }) => ({
-    showModal: !showModal
-    }))
-
-    
-  }
 
   handleFormSubmit = searchName => {
     this.setState({
@@ -67,8 +78,28 @@ export class App extends Component {
     });
   }
 
+  toggleModal = (modalPhoto) => {
+    this.setState(({ showModal }) => ({
+    showModal: !showModal
+    }))
+
+    this.setState({modalPhoto})
+  }
+
+  modalBackdropClick = evt => {
+    console.log('кликнули в бекдроп');
+
+    console.log('evt.CurrentTarget ', evt.currentTarget);
+    console.log('evt.Target ', evt.target);
+
+    if (evt.currentTarget === evt.target) {
+      this.toggleModal();
+    }
+
+  }
+
   render() {
-       const { imagesHits, error, status, showModal } = this.state;
+       const { imagesHits, error, status, showModal, modalPhoto } = this.state;
 
         if (status === 'pending') {
             return <Loader />
@@ -84,10 +115,10 @@ export class App extends Component {
       <main className="App">
         <Searchbar onSubmit={this.handleFormSubmit} />
         <ImageGallery searchName={this.state.searchName} >
-          <ImageGalleryItem imagesHits={imagesHits} />
+          <ImageGalleryItem imagesHits={imagesHits} toggleModal={this.toggleModal} />
           {imagesHits.length > 0 && <Button onIncrement={this.handleIncrement} >Load more</Button>}
         </ImageGallery>
-        {showModal && <Modal />}
+        {showModal && <Modal modalPhoto={modalPhoto} modalBackdropClick={this.modalBackdropClick} />}
       </main>
     );
   }

@@ -1,10 +1,10 @@
 import css from './Modal.module.css'
 
-export const Modal = () => {
+export const Modal = ({modalPhoto, modalBackdropClick}) => {
     return (
-        <div className={css.Overlay}>
+        <div className={css.Overlay} onClick={modalBackdropClick}>
             <div className={css.Modal}>
-                <img src="" alt="" />
+                <img src={modalPhoto} alt="" />
             </div>
         </div>
     )
