@@ -1,12 +1,12 @@
 import css from './ImageGalleryItem.module.css'
 
-export const ImageGalleryItem = ({ imagesHits, toggleModal }) => {
-    console.log(imagesHits);
+export const ImageGalleryItem = ({ item, onSelect }) => {
+
     return (
-        imagesHits.map(image =>
-            <li key={image.id} className={css.ImageGalleryItem}>
-                <img className={css.ImageGalleryItemImage} src={image.webformatURL} alt={image.tags} onClick={() => toggleModal(image.largeImageURL)}/>
-            </li>
-        )
+            <img
+                className={css.ImageGalleryItemImage}
+                src={item.webformatURL} alt={item.tags}
+                onClick={() => onSelect(item.largeImageURL)}
+            />
     )
 }

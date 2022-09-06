@@ -2,7 +2,6 @@ import { Component } from "react";
 import { ImageGallery } from "./ImageGallery/ImageGallery";
 import { Searchbar } from "./Searchbar/Searchbar";
 import { Button } from "components/Button/Button";
-import { ImageGalleryItem } from "components/ImageGalleryItem/ImageGalleryItem";
 import { Loader } from "components/Loader/Loader";
 import { Modal } from "./Modal/Modal";
 
@@ -20,14 +19,10 @@ export class App extends Component {
   }
 
   componentDidMount() {
-    console.log('componentDidMount');
-
     window.addEventListener('keydown', this.handleKeyDown)
   }
 
   componentWillUnmount() {
-    console.log('componentWillUnmount');
-
     window.removeEventListener('keydown', this.handleKeyDown)
   }
 
@@ -38,7 +33,7 @@ export class App extends Component {
 
 
         if (prevName !== nextName || prevState.page !== page) {
-
+          this.setState({ status: 'pending' });
             galeryAPI.fetchGalery(nextName, page)
                 .then(imagesHits => this.setState(state => ({
                     imagesHits: [...state.imagesHits, ...imagesHits.hits],
@@ -71,7 +66,6 @@ export class App extends Component {
       searchName,
       page: 1,
       imagesHits: [],
-      status: 'pending',
     });
   }
 
@@ -84,10 +78,10 @@ export class App extends Component {
   }
 
   modalBackdropClick = evt => {
-    console.log('кликнули в бекдроп');
+    // console.log('кликнули в бекдроп');
 
-    console.log('evt.CurrentTarget ', evt.currentTarget);
-    console.log('evt.Target ', evt.target);
+    // console.log('evt.CurrentTarget ', evt.currentTarget);
+    // console.log('evt.Target ', evt.target);
 
     if (evt.currentTarget === evt.target) {
       this.toggleModal();
@@ -97,24 +91,14 @@ export class App extends Component {
 
   render() {
        const { imagesHits, error, status, showModal, modalPhoto } = this.state;
-
-        if (status === 'pending') {
-            return <Loader />
-        }
-
-        if (status === 'rejected') {
-            return <h1>{error.message}</h1>
-        }
-
-
     
     return (
       <main className="App">
         <Searchbar onSubmit={this.handleFormSubmit} />
-        <ImageGallery searchName={this.state.searchName} >
-          <ImageGalleryItem imagesHits={imagesHits} toggleModal={this.toggleModal} />
-          {imagesHits.length > 0 && <Button onIncrement={this.handleIncrement} >Load more</Button>}
-        </ImageGallery>
+        <ImageGallery items={imagesHits} toggleModal={this.toggleModal} />
+        {imagesHits.length > 0 && status !== 'pending' && <Button onIncrement={this.handleIncrement} >Load more</Button>}
+        {status === 'pending' && <Loader />}
+        {status === 'rejected' &&  <h1>{error.message}</h1>}
         {showModal && <Modal modalPhoto={modalPhoto} modalBackdropClick={this.modalBackdropClick} />}
       </main>
     );
