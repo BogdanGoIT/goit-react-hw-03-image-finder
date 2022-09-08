@@ -18,13 +18,7 @@ export class App extends Component {
     modalPhoto: null,
   }
 
-  componentDidMount() {
-    window.addEventListener('keydown', this.handleKeyDown)
-  }
 
-  componentWillUnmount() {
-    window.removeEventListener('keydown', this.handleKeyDown)
-  }
 
   componentDidUpdate(prevProps, prevState) {
         const prevName = prevState.searchName;
@@ -99,7 +93,7 @@ export class App extends Component {
         {imagesHits.length > 0 && status !== 'pending' && <Button onIncrement={this.handleIncrement} >Load more</Button>}
         {status === 'pending' && <Loader />}
         {status === 'rejected' &&  <h1>{error.message}</h1>}
-        {showModal && <Modal modalPhoto={modalPhoto} modalBackdropClick={this.modalBackdropClick} />}
+        {showModal && <Modal modalPhoto={modalPhoto} modalBackdropClick={this.modalBackdropClick} handleKeyDown={this.handleKeyDown} />}
       </main>
     );
   }
